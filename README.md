@@ -1,1 +1,7 @@
-## Proyecto de prueba
+# Proyecto de prueba
+
+## Integrantes
+
+## Stack
+
+## Sobre nosotros
