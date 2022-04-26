@@ -163,7 +163,7 @@ Quit the server with CONTROL-C.
 
 Felicidades ya hemos instalado nuestro proyecto Django con exito :raised_hands: :confetti_ball:
 
-#### 2.2 Implementando Django REST Framework (DRF) :page_facing_up::satellite:
+#### 2.1.1 Implementando Django REST Framework (DRF) :page_facing_up::satellite:
 
 Django Rest Framework es una herramienta que nos va a facilitar el desarrollo de APIs para nuestra web.
 Esto nos permitirá, acceder/modificar/eliminar datos del servidor desde una aplicación móvil, por ejemplo.
@@ -214,7 +214,7 @@ python3 manage.py runserver
 
 Si vemos el mensaje de que nuestro proyecto esta escuchando el puerto 8000 significa que todo esta bien.
 
-#### 2.3 Creando una App en Django
+#### 2.1.2 Creando una App en Django
 
 En la filosofia de Django tenemos dos conceptos claves:
 
@@ -293,24 +293,197 @@ INSTALLED_APPS = [
 
 
 
+#### 2.1.3 Creando modelos en Django :label::recycle:
+
+La idea principal es que cada app tenga un dominio o una responsabilidad en especifico ( `SOLID - Single responsability`), comunmente podemos encontrarlos en el modulo `models.py` declarados de la siguiente forma:
+
+```python
+from django.db import models
+
+
+class Person(models.Model):
+    id = models.AutoField(primary_key=True)
+    email = models.EmailField(max_length=255)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    rut = models.CharField(max_length=12)
+
+    class Meta:
+        managed = True
+
+class Pet(models.Model):
+    id = models.AutoField(primary_key=True)
+   	species = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
+    age = models.IntegerField()
+    color = models.CharField(max_length=50)
+
+    class Meta:
+        managed = True
+```
+
+Dependiendo del tamaño del proyecto y la escalabilidad de este es necesario cambiar la estructura del directorio de una app permitiendo gestionar los modelos de la siguiente forma:
+
+```bash
+petclub/
+	...
+	models/
+		__init_.py
+		person_models.py
+		pet_models.py
+	...
+```
+
+De esta manera se encapsulan los modelos en modulos que los relacionen entre si, pero para este caso (proyecto personal) no es necesario trabajar de esta forma. :dog2:
+
+Vamos a crear los modelos `Person` y `Pet` que se utilizaron del ejemplo mas arriba :arrow_up::
+
+```python
+class Person(models.Model)
+
+class Pet(models.Model)
+```
+
+Con esta definicion de las entidades debemos tener un registro de los cambios que hemos realizado en nuestros modelos, para esto utilizaremos el siguiente comando:
+
+```
+python3 manage.py makemigrations
+```
+
+`makemigrations` buscara en cada `app` por cambios no registrados en los modelos y creara automaticamente una migracion para definir estos cambios en la persistencia, mostrando un mensaje similar a este:
+
+```sh
+Migrations for 'petclub':
+  petclub/migrations/0001_initial.py
+    - Create model Person
+    - Create model Pet
+```
+
+Creando un archivo en migrations con la siguiente notacion:
+
+```
+00x_nombremigracion.py
+
+# x = numero de la migracion
+```
+
+Ya tenemos la receta para poder persistir estos cambios en nuestra base de datos, para el trabajo personal solo utilizaremos sqlite. Ahora debemos aplicar la migracion de esta forma:
+
+```bash
+python3 manage.py migrate
+```
+
+Desplegando lo siguiente:
+
+```sh
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, petclub, sessions
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying petclub.0001_initial... OK
+  Applying sessions.0001_initial... OK
+```
+
+
+
+#### 2.1.4 Superuser :crown:
+
+Django provee una gestion de usuarios muy completa, que por esta vez utilizaremos. Creamos un superusuario con el comando:
+
+```bash
+python3 manage.py createsuperuser
+```
+
+Aca en la consola nos solicitaran datos como **nombre**, **email** y **contraseña** para establecer un **super-usuario** en el projecto.
+
+
+
+ ####  2.1.5 Views :motor_scooter: :package:
+
+
+
+Ahora que tenemos nuestros modelos, podemos crear `views` que actuaran como controladores de las `peticiones` que reciba nuestro `web service.`
+
+Creamos una view que nos despliegue un hola mundo como ejemplo en `views.py`:
+
+```python
+# modulos de DRF
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+class HelloWorld(APIView):
+    def get(self, request): # verbo de la peticion como un metodo
+        # logica asociada al endpoint
+        return Response(data="Hello, World !", status=200) # respuesta del servicio
+```
+
+y en `urls.py` eliminamos el path del admin y añadimos nuestra view asi:
+
+```python
+from django.contrib import admin
+from django.urls import path, include
+
+from petclub.views import HelloWorld
+
+urlpatterns = [
+    path('hi', HelloWorld.as_view(), name="helloworld"),
+    path('api-auth/', include('rest_framework.urls')),
+]
+
+```
+
+Levantamos el proyecto y hacemos un curl a la url `localhost:8000/hi`:
+
+```bash
+curl localhost:8000/hi
+
+> "Hello World"
+```
+
+Podemos utilizar las template de DRF para una vision mas humana :eyes:
+
+```bash
+localhost:8000/hi # en un navegador
+```
+
+
+
 ### 3. Trabajo grupal :desktop_computer::busts_in_silhouette:
 
-
+> Not yet !
 
 
 
 ### 4. Comandos utiles
 
-```
-# Levantar proyecto Django
-python3 manage.py runserver
+```bash
+# con django-admin
+django-admin 
+	- startapp <nombre_app> # Crea una nueva app
+	- startproject <nombre_proyecto> # Crea un nuevo proyecto
 
-# Crear migraciones
-python3 manage.py makemigrations
+# Con manage.py
+python3 manage.py 
+    - makemigrations # Crea migraciones
+    - showmigrations # Ve las migraciones y su estado
+    - migrate # Aplica las migraciones
+    - createsuperuser # Crea un super-usuario
 
-# Aplicar migraciones
-python3 manage.py migrate
-
-# Crear
 ```
 
