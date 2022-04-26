@@ -1,4 +1,12 @@
-## Release 22.0.0
-Wednesday 13 Apr
+
+## Release 22.1.0.s25042252
+Monday 25 Apr, 2022
+
+* **Feature**
+    - New README update with new steps for the personal work project.
+    - New Django project with a single app called petclub.
+
+## Release 22.1.0
+Wednesday 13 Apr, 2022
 
 * **Feature** [Update README.md](https://github.com/garojar/myFirstRepo/pull/1)
