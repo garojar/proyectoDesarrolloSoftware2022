@@ -17,7 +17,7 @@ class Pet(models.Model):
 
 class Person(models.Model):
     id = models.AutoField(primary_key=True)
-    email = models.EmailField(max_length=255)
+    email = models.EmailField(max_length=255, null=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     rut = models.CharField(max_length=12)
