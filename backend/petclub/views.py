@@ -62,4 +62,4 @@ class PersonAPIView(APIView):
         return Response(data=data, status=status_code)
 
     def get(self, request):
-        pass
+        return Response(data=Person.objects.all().values(), status = 200)
