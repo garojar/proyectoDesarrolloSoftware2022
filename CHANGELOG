@@ -1,12 +1,28 @@
 
+## Release 22.2.0
+Thursday 2022, 02 Jun
+
+* **Backend Features**
+    - Add Pet and Person models
+    - Create migrations for each models
+    - Add endpoint for Pet and Person
+    - Create serializers for each models depending of the request method
+    - Add settings for CORS headers
+
+* **Frontend Features**
+    - Add Svelte project on the repo
+    - Setup the svelte project
+    - Add sveltestrap library to project
+    - Add a App.svelte init page for testing
+
 ## Release 22.1.0.s25042252
-Monday 25 Apr, 2022
+Monday 2022, 25 Apr
 
 * **Feature**
     - New README update with new steps for the personal work project.
     - New Django project with a single app called petclub.
 
 ## Release 22.1.0
-Wednesday 13 Apr, 2022
+Wednesday 2022, 13 Apr
 
 * **Feature** [Update README.md](https://github.com/garojar/myFirstRepo/pull/1)
