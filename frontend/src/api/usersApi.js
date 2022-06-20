@@ -1,4 +1,4 @@
-
+import axios from 'axios';
 export const getPersons = async () => {
 
     const url = 'http://localhost:8000/persons/';
@@ -9,3 +9,15 @@ export const getPersons = async () => {
     const responseData = await response.json();
     console.log(responseData);
 };
+
+// Alternatively
+export const axiosGetPersons = async () => {
+    const url = 'http://127.0.0.1:8000/persons/';
+    const response = await axios({
+        method: 'GET',
+        url,
+    });
+
+    console.log(response);
+
+}

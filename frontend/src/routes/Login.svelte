@@ -8,15 +8,10 @@
     } from 'sveltestrap';
     import { createUserWithEmailAndPassword } from 'firebase/auth';
     import { auth } from '../firebase';
-    import { getPersons } from '../api/usersApi';
-    export let userIsLoggedIn;
+    import { getPersons, axiosGetPersons } from '../api/usersApi';
 
     let emailValue = '';
     let passwordValue = '';
-
-    const submit = () => {
-        userIsLoggedIn = true;
-    };
 
 
     const useFirebase = async () => {
@@ -43,5 +38,5 @@
     </FormGroup>
 
     <Button on:click={getPersons} color="primary"> Iniciar Sesion </Button>
-    <Button on:click={useFirebase} color="secondary"> Use Firebase </Button>
+    <Button on:click={axiosGetPersons} color="secondary"> Use Firebase </Button>
 </Container>

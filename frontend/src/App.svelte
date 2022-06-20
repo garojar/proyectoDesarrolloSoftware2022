@@ -69,7 +69,7 @@
 		<Route path="/logout" />
 	{:else}
 		<Route path="/login">
-			<Login bind:userIsLoggedIn></Login>
+			<Login></Login>
 		</Route>
 	{/if}
 </div>
